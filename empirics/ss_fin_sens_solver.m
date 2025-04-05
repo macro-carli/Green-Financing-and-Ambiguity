@@ -1,0 +1,92 @@
+%%%%%%%STEADY_STATE SOLVER GREEN AMBIGUITY%%%%%%%%%
+function F = ss_fin_sens_solver(initials, params)
+
+rho_y = params(1);
+nu = params(2);
+alpha = params(3);
+sigma_h = params(4);
+delta = params(5);
+beta = params(6);
+phi = params(7);
+betad = params(8);
+betag = params(9);
+betab = params(10);
+kappa = params(11);
+mg = params(12);
+md = params(13);
+gammap = params(14);
+gammad = params(15);
+gammag = params(16);
+gammab = params(17);
+epsilon = params(18);
+gamma_i = params(19);
+delta_m = params(20);
+m_bar = params(21);
+e_star = params(22);
+xi = params(23);
+rho_ad = params(24);
+rho_ag = params(25);
+rho_amb = params(26);
+rho_fd = params(27);
+rho_fg = params(28);
+amb = params(29);
+ad = params(30);
+ag = params(31);
+r = params(32);
+fd = params(33);
+fg = params(34);
+zd = params(35);
+zg = params(36);
+qd = params(37);
+qg = params(38);
+chi = params(39);
+
+
+yd = initials(1); 
+yg = initials(2);
+pd = initials(3);
+pg = initials(4);
+kg = initials(5);
+wg = initials(6);
+hg = initials(7);
+kd = initials(8);
+wd = initials(9);
+hd = initials(10);
+e = initials(11);
+y = initials(12);
+lambda = initials(13);
+c = initials(14);
+invd = initials(15); 
+invg = initials(16);
+m = initials(17);
+l = initials(18);
+lg = initials(19);
+ld = initials(20);
+b = initials(21);
+
+F = [y - ((nu^(1/rho_y)*yd^((rho_y-1)/rho_y) + (1-nu)^(1/rho_y)*yg^((rho_y-1)/rho_y))^(rho_y/(rho_y-1)));
+pd - (((nu)^(1/rho_y))*((yd/y)^(-1/rho_y)));
+pg - (((1-nu)^(1/rho_y))*((yg/y)^(-1/rho_y)));
+kd - ((alpha*pd*yd)/(1/betad - (1-delta) - md/(zd*(1-fd)*betad) +md));
+kg - ((alpha*pg*yg)/(1/betag - (1-delta) - mg/(zg*(1-fg)*betag) +mg));
+invd - delta*kd;
+invg - delta*kg;
+lg - (mg*(qg/(zg*(1-fg)))*kg);
+ld - (md*(qd/(zd*(1-fd)))*kd);
+l - (ld+lg);
+b - ((1-kappa)*l);
+% pib - (zd*(1-fd)*ld + zg*(1-fg)*lg + b - r*b - l);
+% pid - (pd*yd + ld - invd - (1-alpha)*pd*yd - zd*(1-fd)*ld);
+% pig - (pg*yg + lg - invg - (1-alpha)*pg*yg - zg*(1-fg)*lg);
+c - (y-invg-invd);
+lambda - (c^(-gammap));
+hd - (((1-alpha)*(pd*yd*lambda))^(1/(sigma_h+1)));
+hg - (((1-alpha)*(pg*yg*lambda))^(1/(sigma_h+1)));
+wd - (((1-alpha)*pd*yd)/hd);
+wg - (((1-alpha)*pg*yg)/hg);
+yd - ((exp(-xi*(m-m_bar))*ad*(kd^(alpha))*(hd^(1-alpha))));
+yg - ((exp(-xi*(m-m_bar))*ag*(kg^(alpha))*(hg^(1-alpha))));
+e - chi*(yd^(epsilon));
+delta_m*(m - m_bar) - (e+e_star)];
+
+end
